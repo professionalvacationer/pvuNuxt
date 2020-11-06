@@ -6,5 +6,30 @@
       "dependsOn": [],
       "customAuth": false
     }
+  },
+  "api": {
+    "pvunuxt1": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authpvunuxt1a6b662d"
+            }
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 35,
+                "description": "public access"
+              }
+            }
+          ]
+        }
+      }
+    }
   }
 }

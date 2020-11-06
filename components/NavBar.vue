@@ -1,47 +1,6 @@
 <template>
   <div id="NavBar">
-    <v-navigation-drawer
-      v-model="drawer"
-      class="pa-0 ma-0"
-      color="#2C3A47"
-      dark
-      permanent
-      :mini-variant="miniVariant"
-      fixed
-      app
-    >
-      <v-list>
-        <v-list-item class="px-2 pt-2">
-          <v-list-item-avatar @click.stop="miniVariant = !miniVariant">
-            <v-img
-              :src="require('~/assets/scuba-dive-ok.jpg')"
-              alt="beach office"
-              class="mx-auto clickable"
-            />
-          </v-list-item-avatar>
-
-          <v-list-item-title class="ml-4 text-capitalize">
-            Welcome Username!
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-          shaped
-          active-class="cyan--text"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <NavDrawer />
 
     <!-- APPP BAR STARTS HERE!!!!!!!! -->
     <!-- APPP BAR STARTS HERE!!!!!!!! -->
@@ -97,7 +56,6 @@
         <!-- RIGHT SIDE CONTENT STARTS HERE!!!!!!!!!!!!!!!! -->
         <!-- RIGHT SIDE CONTENT STARTS HERE!!!!!!!!!!!!!!!! -->
         <!-- RIGHT SIDE CONTENT STARTS HERE!!!!!!!!!!!!!!!! -->
-
         <v-col cols="12" xl="2" lg="2" md="2" class="hidden-sm-and-down">
           <v-row>
             <v-col>
@@ -105,13 +63,7 @@
             </v-col>
             <v-col>
               <Register v-if="!$auth.isAuthenticated" />
-
-              <v-btn
-                v-if="$auth.isAuthenticated"
-                @click="$store.dispatch('auth/logout')"
-              >
-                Logout
-              </v-btn>
+              <Logout v-else />
             </v-col>
           </v-row>
         </v-col>
@@ -151,20 +103,11 @@
           <v-list-item-title>{{ item.text }}</v-list-item-title>
         </v-list-item>
       </template>
+      <Login v-if="!$auth.isAuthenticated" id="login" />
 
-      <Login v-if="!$auth.isAuthenticated" />
+      <Register v-if="!$auth.isAuthenticated" id="register" />
 
-      <Register v-if="!$auth.isAuthenticated" />
-
-      <v-btn
-        v-if="$auth.isAuthenticated"
-        class="ml-14"
-        text
-        dark
-        @click="$store.dispatch('auth/logout')"
-      >
-        Logout
-      </v-btn>
+      <Logout v-if="$auth.isAuthenticated" class="ml-14" />
     </v-navigation-drawer>
   </div>
 </template>
@@ -172,12 +115,16 @@
 <script>
 import Register from '~/components/user/Register.vue'
 import Login from '~/components/user/Login.vue'
+import Logout from '~/components/user/Logout.vue'
+import NavDrawer from '~/components/NavDrawer.vue'
 
 export default {
   name: 'NavBar',
   components: {
     Register,
     Login,
+    Logout,
+    NavDrawer,
   },
   data() {
     return {
@@ -198,33 +145,33 @@ export default {
           route: '/infoarea',
           text: 'Info Area',
         },
-        { icon: 'mdi-face-agent', route: '/services', text: 'Services' },
+        { icon: 'mdi-face-agent', route: '/proServices', text: 'Pro Services' },
       ],
       items: [
         {
           icon: 'mdi-apps',
           title: 'Profile',
-          to: '/_user',
+          to: '/profile',
         },
         {
           icon: 'mdi-notebook-check-outline',
-          title: 'Vacations',
-          to: '/_user/vacations',
+          title: 'MyVacations',
+          to: '/myVacations',
         },
         {
           icon: 'mdi-book-open-variant',
-          title: 'Stories',
-          to: '/_user/stories',
+          title: 'MyStories',
+          to: '/myStories',
         },
         {
           icon: 'mdi-exit-run',
-          title: 'Plans',
-          to: '/_user/plans',
+          title: 'MyPlans',
+          to: '/myPlans',
         },
         {
           icon: 'mdi-account-supervisor-circle',
-          title: 'Friends',
-          to: '/_user/friends',
+          title: 'MyFriends',
+          to: '/myFriends',
         },
       ],
       miniVariant: false,
@@ -234,3 +181,13 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+#login {
+  color: white;
+}
+
+#register {
+  color: white;
+}
+</style>

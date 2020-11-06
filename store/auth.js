@@ -1,4 +1,9 @@
+import Amplify from '@aws-amplify/core'
 import { Auth } from 'aws-amplify'
+import awsconfig from '~/aws-exports'
+
+Amplify.configure({ ...awsconfig, ssr: true })
+Auth.configure(awsconfig)
 
 export const state = () => ({
   isAuthenticated: false,
@@ -13,10 +18,14 @@ export const mutations = {
 }
 
 export const actions = {
-  async load({ commit }) {
+  async load({ commit, dispatch }) {
     try {
       const user = await Auth.currentAuthenticatedUser()
       commit('set', user)
+
+      if (user) {
+        await dispatch('user/getUser', user.username, { root: true })
+      }
       return user
     } catch (error) {
       commit('set', null)
@@ -35,9 +44,11 @@ export const actions = {
     return await Auth.confirmSignUp(email, code)
   },
 
-  async login({ commit }, { email, password }) {
+  async login({ commit, dispatch }, { email, password }) {
     const user = await Auth.signIn(email, password)
     commit('set', user)
+
+    await dispatch('user/findOrCreateUser', user, { root: true })
     return user
   },
 

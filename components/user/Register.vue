@@ -120,8 +120,6 @@ export default {
       registerForm: {
         email: '',
         password: '',
-        firstName: '',
-        lastName: '',
         rules: {
           email: (v) => !!(v || '').match(/@/) || 'Please enter a valid email',
           length: (len) => (v) =>

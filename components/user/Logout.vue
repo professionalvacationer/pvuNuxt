@@ -1,0 +1,10 @@
+<template>
+  <v-btn
+    v-if="$auth.isAuthenticated"
+    text
+    dark
+    @click="$store.dispatch('auth/logout')"
+  >
+    Logout
+  </v-btn>
+</template>

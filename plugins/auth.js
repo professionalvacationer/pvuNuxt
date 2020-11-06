@@ -13,6 +13,11 @@ class AuthService {
     return this.$store.state.auth.user
   }
 
+  get id() {
+    if (!this.user) return
+    return this.user.attributes.email
+  }
+
   get email() {
     if (!this.user) return
     return this.user.attributes.email

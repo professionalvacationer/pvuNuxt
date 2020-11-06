@@ -1,0 +1,156 @@
+type Task
+  @model
+  @auth(
+    rules: [
+      {
+        allow: groups
+        groups: ["Admins"]
+        queries: null
+        mutations: [create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Employees"]
+        queries: [get, list]
+        mutations: null
+      }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  description: String
+  status: String
+}
+
+type PrivateNote @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  content: String!
+}
+
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "id", operations: [create, update, delete] }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, delete]
+      }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String!
+  age: String
+  location: String
+  bio: String
+  interests: String
+  createdAt: String!
+  trips: [Trip] @connection(name: "UserTrips", keyField: "authorId")
+  itineraries: [Itinerary]
+    @connection(name: "UserItineraries", keyField: "authorId")
+}
+
+type Trip
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "authorId"
+        operations: [create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, delete]
+      }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  createdAt: String!
+  budget: String!
+  duration: String!
+  overallRating: String
+  authorId: String!
+  author: User! @connection(name: "UserTrips", keyField: "authorId")
+  overview: String!
+  story: String
+}
+
+type Itinerary
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "authorId"
+        operations: [create, update, delete]
+      }
+      {
+        allow: groups
+        groups: ["Admins"]
+        operations: [create, update, delete]
+      }
+      { allow: private, operations: [read] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  createdAt: String!
+  transportation: [TransportationInfo]
+  dining: [DiningInfo]
+  accomodation: [AccomodationInfo]
+  activity: [ActivityInfo]
+  authorId: String!
+  author: User! @connection(name: "UserItineraries", keyField: "authorId")
+}
+
+type TransportationInfo {
+  id: ID!
+  style: String
+  day: Int
+  length: String
+  cost: Int
+  locationStart: String
+  locationFinish: String
+  note: String
+}
+
+type AccomodationInfo {
+  id: ID!
+  day: Int
+  lengthOfStay: String
+  cost: Int
+  location: String
+  name: String
+  type: String
+  note: String
+}
+
+type DiningInfo {
+  id: ID!
+  cost: Int
+  location: String
+  day: Int
+  type: String
+  name: String
+  note: String
+}
+
+type ActivityInfo {
+  id: ID!
+  cost: Int
+  location: String
+  day: Int
+  name: String
+  note: String
+}

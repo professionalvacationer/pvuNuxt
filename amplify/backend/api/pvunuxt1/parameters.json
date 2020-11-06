@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "pvunuxt1",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authpvunuxt1a6b662d",
+            "Outputs.UserPoolId"
+        ]
+    }
+}
